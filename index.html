@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>...</title>
+    <style>
+        .square {
+            background-color: yellow;
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            /* border-radius: 100px; */
+            transform: rotate(0deg);
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+        body {
+            background-color: black;
+        }
+        span {
+            color: white;
+            font-size: 30px;
+        }
+    </style>
+    <body>
+        <div class = 'square template'>
+            <span class = 'span'></span>
+        </div>
+
+        <script>
+            function encrypt(ptext) {
+                console.log("Plaintext: " + ptext + "\n");
+
+                let charList = [];
+
+                for (let char of ptext) {
+                    charList.push(char.toLowerCase());
+                }
+
+                console.log(charList);
+                let newMessage = "";
+
+                let part1 = ""
+                let part2 = ""
+                let index = 0
+
+                for (let char of charList) {
+                    if (index % 2 == 0) {
+                        part1 = part1 + char;
+                    } else {
+                        part2 = part2 + char;
+                    }
+                    index++;
+                }
+
+                newMessage = part1 + part2;
+
+                // newMessage = newMessage.split("").reverse().join("");
+
+                return newMessage;
+            }
+            
+            let size = 65;
+            let height = Math.sqrt(3) * size;
+            let width = 2 * size;
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key == 'a') {
+                    window.scrollTo({top: (document.documentElement.scrollHeight / 2) - (window.innerHeight / 2) + (size / 2), left: (document.documentElement.scrollWidth / 2) - (window.innerWidth / 2) + (size / 2), behavior: 'smooth'});
+                }
+            })
+            
+            function fromGridCoords(x, y) {
+                let newX = x * (size);
+                let newY = y * (size);
+
+                // if (x % 2 === 0) {
+                //     newY += size / 2;
+                // }
+
+                return [newX, newY];
+            }
+
+            function getColor() {
+                let r = (Math.random() * 230) + 25;
+                let g = (Math.random() * 230) + 25;
+                let b = (Math.random() * 230) + 25;
+                return `rgb(${r}, 0, 0)`
+            }
+
+            const gridSize = 13; // Size of whole hex grid!
+            
+            var squareTemp = document.querySelector('.square.template');
+
+            var fullText = "Reading opens doors to new worlds, filled with endless adventures and knowledge. It enriches our minds, broadens our perspectives, and allows us to grow as individuals."
+            var texts = ["1234567890", "weeeeeeeee", "qwertyuiop"]
+
+            fullText = encrypt(fullText);
+
+            alert(fullText.length);
+            
+            for (let x = 0; x < gridSize; x++) {
+                for (let y = 0; y < gridSize; y++) {
+                    let square = squareTemp.cloneNode(true);
+
+                    let hexCoords = fromGridCoords(x, y);
+                    square.style.left = `${hexCoords[0]}px`;
+                    square.style.top = `${hexCoords[1]}px`;
+                    square.style.width = `${size - (size/13)}px`;
+                    square.style.height = `${size - (size/13)}px`;
+                    document.body.appendChild(square);
+                    square.setAttribute('x', x);
+                    square.setAttribute('y', y);
+
+                    if (texts[y]) {
+                        square.querySelector('.span').textContent = texts[y][x];
+                    }
+
+                    if (fullText) {
+                        square.querySelector('.span').textContent = fullText[(y * gridSize) + x]
+                    }
+                    
+                    square.style.backgroundColor = getColor();
+                    let middle = gridSize / 2;
+                    let distance = Math.sqrt(((x - middle)**2) + ((y - middle)**2))
+                    square.setAttribute('dist', distance);
+                    
+                    // if (distance <= 5) {
+                    //     // let rnd = Math.random() * 10;
+                    //     // if (rnd > distance - 10) {
+                    //     //     // hex.style.backgroundColor = 'white';
+                    //     //     hex.remove();
+                    //     // }
+                    //     hex.remove();
+                    // }
+                    // if (y < middle + 3 || y < middle - 3) {
+                    //     hex.style.backgroundColor = 'white';
+                    // }
+                    
+                    square.addEventListener('click', function() {
+                        alert(square.getAttribute('x') + ', ' + square.getAttribute('y') + '   Dist: ' + square.getAttribute('dist'));
+                    })
+                }
+            }
+            squareTemp.remove();
+        </script>
+    </body>
+    </head>
+</html>
