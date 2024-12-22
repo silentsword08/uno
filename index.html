@@ -28,8 +28,8 @@
         }
         .rule {
             background-color: rgb(250, 50, 50);
-            height: 160px; width: 75%;
-            margin-left: 12.5%; margin-top: 2%;
+            height: 200px; width: 90%;
+            margin-left: 5%; margin-top: 2%;
             border-radius: 10px;
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
             display: flex;
@@ -101,15 +101,25 @@
                 ["Gimme that color", "Every time a player draws a card, they must announce the card's color.", "3"],
                 ["Gimme that number", "Every time a player draws a card, they must announce the card's number.", "2"],
                 ["/color card hog!","Every time a /color card is played, the next player must add it to their hand.","3"],
-                ["\"UNO!\"","Calling out a player for not saying \"Uno\" before the next card is played gives them four cards instead of 2.","1"],
-                ["Shhhhh!","Starting when the next card is played, players must draw a card for each word they say aloud.","2"],
+                ["Do your spanish homework","Calling out a player for not saying \"Uno\" before the next card is played gives them four cards instead of two.","1"],
+                ["Shhhhh!","Starting when the next card is played, players must draw a card for each word they say aloud (unless the word is \"Uno\" or another rule says against it).","2"],
                 ["Double trouble","The numbers of cards to draw from +2 cards or wild +4 cards are doubled.","3"],
                 ["So many choices","When a player plays a wild card or a wild +4 card, the next player decides the color instead.","1"],
                 ["Because 7 8 /number!","/number cards cannot be played.","2"],
                 ["Karma","When a player plays a /special card, its effect applies to them instead of the next player.","2"],
-                ["Pay attention","When a player plays a card that cannot be played, they must draw ten cards (except if another rule forces them to).","2"],
+                ["Pay attention","When a player plays a card that cannot be played, they must draw six cards (except if another rule allows them to).","2"],
                 ["Not a rule follower","When a player draws a card, they may play it even if they are not allowed to.","2"],
-                ["","",""]
+                ["/color is superior","Wild cards and wild +4 cards can only change the color to /color.","1"],
+                ["Making a comeback","If a player has ten or more cards in their hand at the start of a turn, they may place any three cards onto the discard pile. The effects of these cards do not apply and they do not need to match the previous card.","2"],
+                ["Wait it out","A player with no cards left in their hand does not win the game. On their turn, they may choose to draw a card or simply skip their turn.","2"],
+                ["Lucky number seven","If a player has exactly seven cards in their hand at the start of their turn, they may pick a card from their hand and add it to the next player's hand before playing a card.","2"],
+                ["Keep it to yourself","Each time a player draws a card, they must put it in their hand instead of playing it.","1"],
+                ["25% chance it's red, right?","At the start of each player's turn, they may choose a card from the next player's hand and guess its color. If they guess incorrectly, they must add that card to their hand. If they guess correctly, the other player must keep the card and draw 3 new cards.","3"],
+                ["I look good in /color","At the start of a player's turn, if they have three or more /color cards in their hand, they may discard all of them at once as their turn.","3"],
+                ["Switcheroo","When a player plays a /number card, they must trade hands with the next player. If it is also a /color card, they may take another turn.","3"],
+                ["Take a good look","All cards in every player's hands must be visible to every other player at all times.","3"],
+                ["Lucky draw","If a player somehow draws a /color /number card, they may keep it and immediately discard all of their other cards. Don't forget to say \"Uno.\"","4"],
+                ["Minefield","On each player's turn, they must draw a card. If the card they draw is a /color card, they must draw four cards. If the card they draw is a /number card, they must draw ten cards. If it is both, they must draw a total of fourteen cards.","4"]
             ]
 
             function capitalize(str) {
@@ -154,12 +164,14 @@
                     color = "gold";
                 } else if (intensity == 3) {
                     color = "red";
+                } else if (intensity == 4) {
+                    color = "black";
                 }
                 
                 box.style.backgroundColor = color;
                 ruleHeader.style.borderColor = color;
 
-                pastRuleTitles.push(title);
+                pastRuleTitles.unshift(title);
                 // console.log(pastRuleTitles);
 
                 if (pastRuleTitles.length >= 5) {
@@ -202,6 +214,8 @@
 
                     let randomRule = getRule();
                     newRuleBox(randomRule[0], randomRule[1], randomRule[2]);
+                } else if (event.key == "\\") {
+                    console.log(pastRuleTitles);
                 }
             })
         </script>
