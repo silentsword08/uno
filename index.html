@@ -3,149 +3,207 @@
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>...</title>
+    <title>Uno</title>
     <style>
-        .square {
-            background-color: yellow;
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            /* border-radius: 100px; */
-            transform: rotate(0deg);
-            display: flex;
-            text-align: center;
-            justify-content: center;
-            align-items: center;
-        }
         body {
-            background-color: black;
+            background-color: rgb(50, 50, 60);
+            margin: 0px;
+            padding: 0px;
         }
-        span {
+        h1 {
+            background-color: rgb(30, 30, 40);
+            height: 50px;
+            margin: 0px;
+            padding: 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .text {
             color: white;
-            font-size: 30px;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif;
+            text-align: center;
+            font-size: 35px;
+        }
+        .rule {
+            background-color: rgb(250, 50, 50);
+            height: 160px; width: 75%;
+            margin-left: 12.5%; margin-top: 2%;
+            border-radius: 10px;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: top;
+            flex-direction: column;
+        }
+        .start-text {
+            font-size: 50px;
+            /* width: 200px; */
+            height: 100px;
+            margin-left: auto; margin-top: 0%;
+            text-align: center;
+            /* background-color: blue; */
+        }
+        .rule-header {
+            background-color: white;
+            height: 35%; width: calc(100% - 10px);
+            border-radius: 10px;
+            border: 5px solid red;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .rule-header-text {
+            /* font-size: 25px; */
+            /* background-color: blue; */
+        }
+        .rule-desc {
+            margin-top: 2%;
+            /* background-color: green; */
         }
     </style>
     <body>
-        <div class = 'square template'>
-            <span class = 'span'></span>
+        <h1>
+            <span class = "text">Uno</span>
+        </h1>
+
+        <div class = "start-text">
+            <span class = "text">Press space to generate a rule</span>
+        </div>
+            
+        <div class = "rule">
+            <div class = "rule-header">
+                <span class = "text rule-header-text" style = "color: black; text-shadow: 0px 0px 0px rgba(0, 0, 0, 0);"></span>
+            </div>
+            <span class = "rule-desc text" style = "text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5)"></span>
         </div>
 
         <script>
-            function encrypt(ptext) {
-                console.log("Plaintext: " + ptext + "\n");
+            let ogRuleBox = document.querySelector('.rule');
+            ogRuleBox.style.visibility = "hidden";
+            ogRuleBox.style.position = "absolute";
 
-                let charList = [];
+            let colors = ["red","blue","green","yellow"]
+            let numbers = [
+              "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+            ];
+            let specials = ["skip", "reverse", "+2"]
 
-                for (let char of ptext) {
-                    charList.push(char.toLowerCase());
-                }
+            let allRules = [
+                // [Title, Desc, Intensity]
+                ["Skip you, skip you, skip you!", "Skip cards can be played on any number card.", "2"],
+                ["Back to me", "Reverse cards can be played on any number card.", "2"],
+                ["One card?!", "/number cards act as a +1 card.", "1"],
+                ["Rainbow /number", "Any color number card can be played on a /number card", "1"],
+                ["So close", "A /number card can be played on a number card one higher or lower.", "1"],
+                ["I can show you the world", "All /color cards in players' hands must be visible to every other player at all times.", "2"],
+                ["Gimme that color", "Every time a player draws a card, they must announce the card's color.", "3"],
+                ["Gimme that number", "Every time a player draws a card, they must announce the card's number.", "2"],
+                ["/color card hog!","Every time a /color card is played, the next player must add it to their hand.","3"],
+                ["\"UNO!\"","Calling out a player for not saying \"Uno\" before the next card is played gives them four cards instead of 2.","1"],
+                ["Shhhhh!","Starting when the next card is played, players must draw a card for each word they say aloud.","2"],
+                ["Double trouble","The numbers of cards to draw from +2 cards or wild +4 cards are doubled.","3"],
+                ["So many choices","When a player plays a wild card or a wild +4 card, the next player decides the color instead.","1"],
+                ["Because 7 8 /number!","/number cards cannot be played.","2"],
+                ["Karma","When a player plays a /special card, its effect applies to them instead of the next player.","2"],
+                ["Pay attention","When a player plays a card that cannot be played, they must draw ten cards (except if another rule forces them to).","2"],
+                ["Not a rule follower","When a player draws a card, they may play it even if they are not allowed to.","2"],
+                ["","",""]
+            ]
 
-                console.log(charList);
-                let newMessage = "";
-
-                let part1 = ""
-                let part2 = ""
-                let index = 0
-
-                for (let char of charList) {
-                    if (index % 2 == 0) {
-                        part1 = part1 + char;
-                    } else {
-                        part2 = part2 + char;
-                    }
-                    index++;
-                }
-
-                newMessage = part1 + part2;
-
-                // newMessage = newMessage.split("").reverse().join("");
-
-                return newMessage;
+            function capitalize(str) {
+                if (!str) return str;
+                return str.charAt(0).toUpperCase() + str.slice(1);
             }
-            
-            let size = 65;
-            let height = Math.sqrt(3) * size;
-            let width = 2 * size;
 
-            document.addEventListener('keydown', function(event) {
-                if (event.key == 'a') {
-                    window.scrollTo({top: (document.documentElement.scrollHeight / 2) - (window.innerHeight / 2) + (size / 2), left: (document.documentElement.scrollWidth / 2) - (window.innerWidth / 2) + (size / 2), behavior: 'smooth'});
+            let pastRuleTitles = [];
+
+            function newRuleBox(title = "", desc = "", intensity = 1) {
+                let box = ogRuleBox.cloneNode(true);
+
+                document.body.appendChild(box);
+                box.style.visibility = "visible";
+                box.style.position = "relative";
+
+                let ruleHeader = box.querySelector(".rule-header");
+                let titleText = box.querySelector(".rule-header-text");
+                let descText = box.querySelector(".rule-desc");
+
+                let randColor = colors[Math.round(Math.random() * (colors.length - 1))];
+                let randNumber = numbers[Math.round(Math.random() * (numbers.length - 1))];
+                let randSpecial = specials[Math.round(Math.random() * (specials - 1))];
+
+                let newTitle = capitalize(title
+                    .replace("/color", randColor)
+                    .replace("/number", randNumber)
+                    .replace("/special", randSpecial));
+                let newDesc = capitalize(desc
+                    .replace("/color", randColor)
+                    .replace("/number", randNumber)
+                    .replace("/special", randSpecial));
+
+                titleText.textContent = newTitle;
+                descText.textContent = newDesc;
+
+                let color = ""
+                
+                if (intensity == 1) {
+                    color = "chartreuse";
+                } else if (intensity == 2) {
+                    color = "gold";
+                } else if (intensity == 3) {
+                    color = "red";
+                }
+                
+                box.style.backgroundColor = color;
+                ruleHeader.style.borderColor = color;
+
+                pastRuleTitles.push(title);
+                // console.log(pastRuleTitles);
+
+                if (pastRuleTitles.length >= 5) {
+                    pastRuleTitles.pop();
+                }
+            }
+
+            function getRule() {
+                let found = false;
+                let rule = null
+                
+                while (!rule) {
+                    let index = Math.round(Math.random() * (allRules.length - 1));
+                    rule = allRules[index];
+
+                    if (pastRuleTitles.length > 0) {
+                        for (let pastRuleTitle of pastRuleTitles) {
+                            if (rule[0] == pastRuleTitle) {
+                                console.log(rule[0])
+                                rule = null;
+                                break;
+                            }
+                        }
+                    }
+                    
+                }
+                return rule;
+            }
+
+            document.addEventListener("keydown", function(event) {
+                if (event.key == " ") {
+                    let rules = document.querySelectorAll(".rule")
+                    if (rules.length >= 3) {
+                        rules[0].remove();
+                    }
+                    
+                    if (document.querySelector(".start-text")) {
+                        document.querySelector(".start-text").remove();
+                    }
+
+                    let randomRule = getRule();
+                    newRuleBox(randomRule[0], randomRule[1], randomRule[2]);
                 }
             })
-            
-            function fromGridCoords(x, y) {
-                let newX = x * (size);
-                let newY = y * (size);
-
-                // if (x % 2 === 0) {
-                //     newY += size / 2;
-                // }
-
-                return [newX, newY];
-            }
-
-            function getColor() {
-                let r = (Math.random() * 230) + 25;
-                let g = (Math.random() * 230) + 25;
-                let b = (Math.random() * 230) + 25;
-                return `rgb(${r}, 0, 0)`
-            }
-
-            const gridSize = 13; // Size of whole hex grid!
-            
-            var squareTemp = document.querySelector('.square.template');
-
-            var fullText = "Reading opens doors to new worlds, filled with endless adventures and knowledge. It enriches our minds, broadens our perspectives, and allows us to grow as individuals."
-            var texts = ["1234567890", "weeeeeeeee", "qwertyuiop"]
-
-            fullText = encrypt(fullText);
-
-            alert(fullText.length);
-            
-            for (let x = 0; x < gridSize; x++) {
-                for (let y = 0; y < gridSize; y++) {
-                    let square = squareTemp.cloneNode(true);
-
-                    let hexCoords = fromGridCoords(x, y);
-                    square.style.left = `${hexCoords[0]}px`;
-                    square.style.top = `${hexCoords[1]}px`;
-                    square.style.width = `${size - (size/13)}px`;
-                    square.style.height = `${size - (size/13)}px`;
-                    document.body.appendChild(square);
-                    square.setAttribute('x', x);
-                    square.setAttribute('y', y);
-
-                    if (texts[y]) {
-                        square.querySelector('.span').textContent = texts[y][x];
-                    }
-
-                    if (fullText) {
-                        square.querySelector('.span').textContent = fullText[(y * gridSize) + x]
-                    }
-                    
-                    square.style.backgroundColor = getColor();
-                    let middle = gridSize / 2;
-                    let distance = Math.sqrt(((x - middle)**2) + ((y - middle)**2))
-                    square.setAttribute('dist', distance);
-                    
-                    // if (distance <= 5) {
-                    //     // let rnd = Math.random() * 10;
-                    //     // if (rnd > distance - 10) {
-                    //     //     // hex.style.backgroundColor = 'white';
-                    //     //     hex.remove();
-                    //     // }
-                    //     hex.remove();
-                    // }
-                    // if (y < middle + 3 || y < middle - 3) {
-                    //     hex.style.backgroundColor = 'white';
-                    // }
-                    
-                    square.addEventListener('click', function() {
-                        alert(square.getAttribute('x') + ', ' + square.getAttribute('y') + '   Dist: ' + square.getAttribute('dist'));
-                    })
-                }
-            }
-            squareTemp.remove();
         </script>
     </body>
     </head>
